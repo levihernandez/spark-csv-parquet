@@ -9,7 +9,7 @@ I develop in MacOS and Linux for this tutorial.
 
 Loading and transforming a small file is quite easy to do. I use my city's data to query parks with specific facilities. Follow these steps:
 
-* Download the small set of 89 records from [City of Tallahassee city park points](http://talgov-tlcgis.opendata.arcgis.com/datasets/3f79ef4a4cc64b30ba314ea8004b4866_5) as CSV
+* Download the small set of 89 records from [City of Tallahassee city park points](http://talgov-tlcgis.opendata.arcgis.com/datasets/3f79ef4a4cc64b30ba314ea8004b4866_5.csv) as CSV
 * Discover data types, this is optional for now
   * headers
   * date, time, timestamps
@@ -34,18 +34,29 @@ Assuming you Java 8 exists in the environment, the list of tools to have handy a
 ```shell
 $ cd ${homedir}/project/bins
 $ curl -L http://apache.cs.utah.edu/zeppelin/zeppelin-0.7.3/zeppelin-0.7.3-bin-all.tgz | tar xvf -
+$ mv zeppelin-0.7.3-bin-all zeppelin
 $ cd zeppelin
 $ bin/zeppelin-daemon.sh start
 ```
 * Apache Spark 2.2
 ```shell
 $ cd ${homedir}/project/bins
-$ cd spark
+$ curl -L https://www.apache.org/dyn/closer.lua/spark/spark-2.2.1/spark-2.2.1-bin-hadoop2.7.tgz | tar xvf -
+$ mv spark-2.2.1-bin-hadoop2.7 spark
 ```
 * inbound and outbound directory for the data
 ```shell
 $ mkdir -p ${homedir}/project/data/{inbound,outbound}
+$ cd ${homedir}/project/data/inbound
+$ curl -O http://talgov-tlcgis.opendata.arcgis.com/datasets/3f79ef4a4cc64b30ba314ea8004b4866_5.csv
 ```
-* 
+* Java 8
+
+```shell
+$ java -version
+java version "1.8.0_152"
+Java(TM) SE Runtime Environment (build 1.8.0_152-b16)
+Java HotSpot(TM) 64-Bit Server VM (build 25.152-b16, mixed mode)
+```
 
 ## The Code
