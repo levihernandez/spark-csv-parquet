@@ -17,20 +17,55 @@ Loading and transforming a small file is quite easy to do. I use my city's data 
 * Download [Spark 2](https://spark.apache.org/downloads.html)
 * Use a prototyping notebook such as [Apache Zeppelin](https://zeppelin.apache.org/download.html) (install not covered here)
 * Create a new project with SBT (not covered in this tutorial)
-* 
+
 
 
 ## Prepare Environment
 Assuming you Java 8 exists in the environment, the list of tools to have handy are:
 
-* SBT (install via Brew)
-  * create new project, mine is named sparkIngest 
+* SBT (install via Brew), 
+  * for Mac OS:
+  
+  ```shell
+  $ brew install sbt
+  ```
+  * configure Eclipse plugins (optional)
+  
+  ```shell
+  $ vi ~/.sbt/0.13/plugins/plugins.sbt
+  addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.3")
+  addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.5")
+  ```
+
+  * create new project, mine is named **sparkIngest** 
+  
   ```shell
   $ mkdir -p ${homedir}/project/{bins,sbtc,data}
   $ cd ${homedir}/project/sbtc
   $ sbt new scala/scala-seed.g8
   ```
+  * configure the build.sbt file, **NOTE:** right now only Scala 2.11 is the max version that works with SBT.
+  
+  ```json
+  name := "sparkIngest"
+  version := "1.0"
+  scalaVersion := "2.11.11"
+  val sparkVersion = "2.2.0"
+  resolvers ++= Seq(
+    "apache-snapshots" at "http://repository.apache.org/snapshots/"
+  )
+  libraryDependencies ++= Seq(
+    "com.typesafe" % "config" % "1.3.1",
+    "org.apache.spark" %% "spark-core" % sparkVersion,
+    "org.apache.spark" %% "spark-sql" % sparkVersion,
+    "org.apache.spark" %% "spark-mllib" % sparkVersion,
+    "org.apache.spark" %% "spark-streaming" % sparkVersion,
+    "org.apache.spark" %% "spark-hive" % sparkVersion
+  )
+  ```
+  
 * Apache Zeppelin, in background mode
+
   ```shell
   $ cd ${homedir}/project/bins
   $ curl -L http://apache.cs.utah.edu/zeppelin/zeppelin-0.7.3/zeppelin-0.7.3-bin-all.tgz | tar xvf -
@@ -40,12 +75,14 @@ Assuming you Java 8 exists in the environment, the list of tools to have handy a
   Zeppelin start                                             [  OK  ]
   ```
 * Apache Spark 2.2
+
   ```shell
   $ cd ${homedir}/project/bins
   $ curl -L https://www.apache.org/dyn/closer.lua/spark/spark-2.2.1/spark-2.2.1-bin-hadoop2.7.tgz | tar xvf -
   $ mv spark-2.2.1-bin-hadoop2.7 spark
   ```
 * inbound and outbound directory for the data
+
   ```shell
   $ mkdir -p ${homedir}/project/data/{inbound,outbound}
   $ cd ${homedir}/project/data/inbound
@@ -61,6 +98,7 @@ Assuming you Java 8 exists in the environment, the list of tools to have handy a
   ```
 
 ## The Code
+
 First we begin with a prototype of what we want to do in [Zeppelin notebooks: spark-csv-parquet ](https://github.com/levihernandez/spark-csv-parquet/tree/master/notebooks).
 
 * Import basic libraries
@@ -74,3 +112,30 @@ First we begin with a prototype of what we want to do in [Zeppelin notebooks: sp
 * create a temp table
 * query the temp table
 
+## SBT Jar
+
+Venturing into the world of Spark can be challenging for begginers. It was the case with me when I tried to setup the SBT environment for the first time. Here are some generic steps to take in order to transfer the Zeppelin notebook prototype into a JAR package.
+
+* create a new SBT project, as shown in the 'Prepare Environment' section
+* configure the build.sbt file inside the project, as shown in the 'Prepare Environment' section
+* create a Scala package structure as sparkIngest/batch
+* create a Scala Object file for the code
+* copy and paste the code from our Zeppelin prototype to the Scala Object file as parks.scala
+
+```java
+$ vi src/main/scala/sparkIngest/batch/parks.scala
+```
+
+* modify the code in the parks.scala file to include a main class and object name
+The SBT project is included in this tutorial inside the sbtc directory.
+
+## Prototyping
+While it is fun to prototype data, it is always more challenging in real life to transform and load terabytes of data into production systems. It is imperative that we know the use case first, know our data, and have a plan to achieve our goals.
+
+In the samples included, I approached the prototypes as an autodiscovery of the data and as a manual structure of the tables. On one hand, autodiscovery of data is the 'lazy' way of having Spark read a CSV. The caveat with this approach is the number of columns (for Spark 1) and the number of rows Spark needs to scan in a file. If we scan a small file in the megabytes, then autodiscovery might make sense, assuming we are not too worried about data types.
+
+The second approach is to define the table structure, tell Spark we have a first row as a header, and map the table structure to the dataframe. This approach is more painful if we have a lot of columns. Once the table structure is defined with the data types taken care of, then scanning of rows is not going to take a long time when we read gigabytes of data.
+
+The protyping for this project is done as a local task. Running the JAR in a Hadoop cluster requires a more strict configuration to ensure we don't overload our nodes by resending the bulk of data over and over again.
+
+Best luck to you on your learning!
