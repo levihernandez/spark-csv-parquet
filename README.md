@@ -61,7 +61,8 @@ Assuming you Java 8 exists in the environment, the list of tools to have handy a
   ```
 
 ## The Code
-First we begin with a prototype of what we want to do in Zeppelin notebooks.
+First we begin with a prototype of what we want to do in [Zeppelin notebooks: spark-csv-parquet ](https://github.com/levihernandez/spark-csv-parquet/tree/master/notebooks).
+
 * Import basic libraries
 * create a 'case class' for the table structure OR let Spark autodetect the schema
 * declare variables for the location of the file
