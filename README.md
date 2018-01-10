@@ -120,7 +120,7 @@ Venturing into the world of Spark can be challenging for begginers. It was the c
 * create a new SBT project, as shown in the 'Prepare Environment' section
 * configure the build.sbt file inside the project, as shown in the 'Prepare Environment' section
 * create a Scala package structure as sparkIngest
-* create a Scala Object file for the code
+* create a Scala Object file for the code named parks.sbt
 * copy and paste the code from our Zeppelin prototype to the Scala Object file as parks.scala. See dir structure:
 
   ```shell
@@ -153,7 +153,6 @@ Venturing into the world of Spark can be challenging for begginers. It was the c
   ```
 
 * modify the code in the parks.scala file to include a main class and object name
-The SBT project is included in this tutorial inside the sbtc directory.
 * compile the code and find the new JAR file
 
 ```shell
