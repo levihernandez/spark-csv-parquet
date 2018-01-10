@@ -7,17 +7,15 @@ I develop in MacOS and Linux for this tutorial.
 
 ## Know the data structure
 
-Loading and transforming a small file is quite easy to do. I use my city's data to query parks with specific facilities. Follow these steps:
+Loading and transforming a small file is quite easy to do. I use my city's data to query parks with specific facilities such as baseball fields, bathrooms, grills, etc. Follow these steps:
 
-* Download the small set of 89 records from [City of Tallahassee city park points](http://talgov-tlcgis.opendata.arcgis.com/datasets/3f79ef4a4cc64b30ba314ea8004b4866_5.csv) as CSV
+* Download the small set of 89 records from [City of Tallahassee park points](http://talgov-tlcgis.opendata.arcgis.com/datasets/3f79ef4a4cc64b30ba314ea8004b4866_5.csv) as CSV
 * Discover data types, this is optional for now
   * headers
   * date, time, timestamps
   * integers, decimals, etc
-* Download [Spark 2](https://spark.apache.org/downloads.html)
-* Use a prototyping notebook such as [Apache Zeppelin](https://zeppelin.apache.org/download.html) (install not covered here)
-* Create a new project with SBT (not covered in this tutorial)
 
+Decide if the file is small enough to auto-load it with Spark or define the table structure manually with data types for large data sets.
 
 
 ## Prepare Environment
@@ -29,7 +27,7 @@ Assuming you Java 8 exists in the environment, the list of tools to have handy a
   ```shell
   $ brew install sbt
   ```
-  * configure Eclipse plugins (optional)
+  * configure Eclipse plugins (this is optional) to import the SBT project into Eclipse
   
   ```shell
   $ vi ~/.sbt/0.13/plugins/plugins.sbt
